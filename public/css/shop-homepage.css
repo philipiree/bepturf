@@ -1,0 +1,43 @@
+/*!
+ * Start Bootstrap - Shop Homepage (https://startbootstrap.com/template-overviews/shop-homepage)
+ * Copyright 2013-2019 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-shop-homepage/blob/master/LICENSE)
+ */
+
+/* font-family: 'Roboto', sans-serif; */
+
+h6,h1,h2,h3,h4,h5,h6,a{
+    font-family: 'Roboto', sans-serif;
+}
+
+a, a:hover {
+  color: orange;
+}
+
+.product_display{
+    font-size: 20px;
+}
+
+.descp{
+    font-size:15px;
+    color: grey;
+    margin-bottom: 0px;
+
+}
+
+.makerdesc{
+    font-size:13px;
+    color: grey;
+     text-transform: uppercase;
+    margin-top: 13px;
+}
+
+.pricetag{
+    color:grey;
+}
+
+.colorsize{
+    color: orangered;
+}
+
+
