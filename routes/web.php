@@ -43,6 +43,9 @@ Route::group(['middleware' => ['auth','admin']], function () {
     Route::get('/categories', 'CategoriesController@index');
     Route::get('/categories-edit/{id}','CategoriesController@edit');
     Route::resource('category', 'CategoriesController');
+    //order routes
+    Route::get('/orders', 'OrdersController@index');
+    Route::get('/orders-edit/{id}','OrdersController@edit');
     /*examples*/
 
     //Route::resource('category', 'CategoryController', ['except' => ['create']]);
@@ -64,8 +67,11 @@ Route::group(['middleware' => ['auth','admin']], function () {
     Route::delete('/cart/{id}', 'CartController@destroy')->name('cart.destroy');
     Route::patch('/cart/{id}', 'CartController@update')->name('cart.update');
 
+    /**checkout controllers */
+    Route::get('/checkout', 'CheckoutController@index')->name('checkout.index');
+    Route::post('/checkout', 'CheckoutController@store')->name('checkout.store');
 
-    Route::get('empty', function(){
+    /*Route::get('empty', function(){
         Cart::destroy();
-    });
+    });*/
 

@@ -58,9 +58,12 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ route('cart.index') }}">Cart</a>
-                @if (Cart::instance('default')->count() > 0)
-                <span>{{ Cart::instance('default')->count() }}</span>
-                @endif
+
+          </li>
+          <li>
+            @if (Cart::instance('default')->count() > 0)
+            <span class="badge badge-secondary">{{ Cart::instance('default')->count() }}</span>
+            @endif
           </li>
         </ul>
       </div>

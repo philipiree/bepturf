@@ -18,7 +18,7 @@
                  <div class="card-body">
                         <div class="row justify-content-center">
                         <div class="col-md-7">
-                            <form action="/categories-update/{{ $categories->id }}" method="POST">
+                        <form action="/categories-update/{{ $categories->id }}" method="POST">
                                 {{-- need these both for updating --}}
                                 {{ csrf_field() }}
                                 {{ method_field('PUT') }}

@@ -64,6 +64,12 @@
               <p>Categories</p>
             </a>
           </li>
+          <li class="{{ 'orders' == request()->path() ? 'active' : '' }}">
+            <a href="/orders">
+              <i class="now-ui-icons education_atom"></i>
+              <p>Orders</p>
+            </a>
+          </li>
           <li>
             <a href="#">
               <i class="now-ui-icons location_map-big"></i>

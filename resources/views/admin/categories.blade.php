@@ -23,6 +23,11 @@
                             {{ session('delete') }}
                         </div>
                     @endif
+                    @if (session('update'))
+                        <div class="alert alert-info" role="alert">
+                            {{ session('update') }}
+                        </div>
+                    @endif
                     </div>
 
 

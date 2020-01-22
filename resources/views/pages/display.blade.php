@@ -14,9 +14,26 @@
     <div class="row">
 
           <div style="margin-top: 60px;"class="col-md-12">
+            @if (session('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+            @endif
+            @if (session('errors'))
+                <div class="alert alert-danger" role="alert">
+                    {{ session('errors') }}
+                </div>
+            @endif
+            @if (session('update'))
+                <div class="alert alert-info" role="alert">
+                    {{ session('update') }}
+                </div>
+            @endif
 
         <div class="row">
             <div class="preview col-md-6">
+                <div class="row">
+                    </div>
 
                 <div class="preview-pic tab-content">
                     <div class="tab-pane active" id="pic-1"><img src="/storage/display_images/{{ $product->display_image }}"/>
@@ -53,22 +70,29 @@
 
                         </div>
                         <div class="col-sm-3" id="form-size">
-
-
-
                             <h6>Quantity</h6>
-                            <select name="quantity" class="custom-select">
+                            {{-- <select name="quantity" class="custom-select">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
                             <option value="4">4</option>
-                            </select>
+                            </select> --}}
 
+                            <select class="custom-select" name="quantity">
+                                @for($i = 1; $i < 10 + 1; $i++)
+                                    <option>{{ $i }}</option>
+                                @endfor
+                                {{-- <option {{ $item->qty == 1 ? 'selected' : '' }}>1</option>
+                                <option {{ $item->qty == 2 ? 'selected' : '' }}>2</option>
+                                <option {{ $item->qty == 3 ? 'selected' : '' }}>3</option>
+                                <option {{ $item->qty == 4 ? 'selected' : '' }}>4</option> --}}
+                            </select>
+                            {{-- <input type="number" class="form-control" id="lastName" name="quantity" required> --}}
                         </div>
 
                         <input type="hidden" name="id" value="{{ $product->id }}">
 
-                        <button type="submit" class=" btn btn-cart">ADD TO CART</button>
+                        <button type="submit" class="btn btn-cart">ADD TO CART</button>
                         </form>
                     </div>
 
@@ -83,5 +107,10 @@
 
 @section('script')
 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/vendor/holder.min.js"></script>
 
 @endsection

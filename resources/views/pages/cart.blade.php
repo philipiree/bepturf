@@ -5,6 +5,28 @@
 <div class="px-4 px-lg-0">
     <!-- End -->
 
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                @if (session('success'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('success') }}
+                </div>
+                @endif
+                @if (session('errors'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session('errors') }}
+                    </div>
+                @endif
+                @if (session('update'))
+                    <div class="alert alert-info" role="alert">
+                        {{ session('update') }}
+                    </div>
+                @endif
+
+            </div>
+        </div>
+    </div>
     <div class="pb-5">
       <div class="container">
         <div class="row">
@@ -16,13 +38,13 @@
                 <thead>
                   <tr>
                     <th scope="col" class="border-0 bg-light">
-                      <div class="p-2 px-3 text-uppercase">Product</div>
+                      <div class="p-2 px-3 text-uppercase ">Product</div>
                     </th>
                     <th scope="col" class="border-0 bg-light">
-                      <div class="py-2 text-uppercase">Price</div>
+                      <div class="py-2 text-uppercase ">Price</div>
                     </th>
                     <th scope="col" class="border-0 bg-light">
-                      <div class="py-2 text-uppercase">Quantity</div>
+                      <div class="py-2 text-uppercase text-center">Quantity</div>
                     </th>
                     <th scope="col" class="border-0 bg-light">
                       <div class="py-2 text-uppercase">Remove</div>
@@ -43,8 +65,12 @@
                     </th>
                     <td class="border-0 align-middle"><strong>₱{{ $item->subtotal }}</strong></td>
                     <td class="border-0 align-middle">
+                    {{-- <div class="col-sm-4" style="margin-left:50px;" id="form-size">
+                    <input  type="number" class="form-control" id="lastName" value="{{ $item->qty }}"name="quantity" required>
+                    </div> --}}
+
                         <select class="quantity" data-id="{{ $item->rowId }}">
-                            @for($i = 1; $i < 5 + 1; $i++)
+                            @for($i = 1; $i < 10 + 1; $i++)
                                 <option {{ $item->qty == $i ? 'selected' : '' }}>{{ $i }}</option>
                             @endfor
                             {{-- <option {{ $item->qty == 1 ? 'selected' : '' }}>1</option>
@@ -74,7 +100,7 @@
           </div>
         </div>
 
-        <div class="row py-5 p-4 bg-white rounded shadow-sm">
+        <div class="row bg-white rounded shadow-sm">
           <div class="col-lg-6">
             <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Instructions for seller</div>
             <div class="p-4">
@@ -93,7 +119,12 @@
                   <strong class="text-muted">Total</strong>
                   <h5 class="font-weight-bold">₱{{ Cart::total()}}</h5>
                 </li>
-              </ul><a href="#" class="btn btn-dark rounded-pill py-2 btn-block">Procceed to checkout</a>
+            </ul>
+            @if (Cart::instance('default')->count() == 0)
+
+            @else
+                <a href="{{route('checkout.index')}}" class="btn btn-dark rounded-pill py-2 btn-block">Checkout</a>
+            @endif
             </div>
           </div>
         </div>
@@ -104,6 +135,10 @@
   @endsection
 
 @section('script')
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+<script src="../../assets/js/vendor/popper.min.js"></script>
+<script src="../../assets/js/vendor/holder.min.js"></script>
 <script src="{{ asset('js/app.js') }}" ></script>
 <script>
     (function(){

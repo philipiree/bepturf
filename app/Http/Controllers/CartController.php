@@ -81,13 +81,18 @@ class CartController extends Controller
     public function store(Request $request)
     {
 
-        $duplicates = Cart::search(function ($cartItem, $rowId) use ($request){
-            return $cartItem->id === $request->id;
-        });
+        // $duplicates = Cart::search(function ($cartItem, $rowId) use ($request){
+        //     return $cartItem->id === $request->id;
+        // });
 
-        if($duplicates->isNotEmpty()){
-            return redirect()->route('cart.index')->with('success', 'Item is already in your cart!');
-        }
+        // if($duplicates->isNotEmpty()){
+        //     return redirect()->route('cart.index')->with('success', 'Item is already in your cart!');
+        // }
+
+        $validation = Validator::make($request->all(),[
+            'quantity' => 'required|numeric',
+        ]);
+
 
 
         $qty = $request->input('quantity');
@@ -97,25 +102,34 @@ class CartController extends Controller
         $info = Product::find($id);
 
 
-        $data['qty']=$qty;
-        $data['id']=$info->id;
-        $data['name']=$info->name;
-        $data['price']=$info->price;
-        $data['weight']=0;
-        $data['options']['image']=$info->display_image;
-        $data['options']['size']=$size;
-        $data['options']['strength']=$str;
-
-
-        Cart::add($data);
-
         // Cart::add($request->id, $request->name, $request->input('quantity'), $request->price , [$request->display_image])
             // ->associate('App\Product');
 
         // dd(Cart::add($request->id, $request->name, $request->input('quantity'), $request->price, 1, [])
         //     ->associate('App\Product'));
+        if($validation->fails()){
+            return back()->with('errors', 'Qty must be a number');
+        }elseif($qty > $info->quantity){
+            return back()->with('errors', 'Qty is exceeding the stock');
+        }else{
 
-        return redirect()->route('cart.index');
+            $data['qty']=$qty;
+            $data['id']=$info->id;
+            $data['name']=$info->name;
+            $data['price']=$info->price;
+            $data['weight']=0;
+            $data['options']['image']=$info->display_image;
+            $data['options']['size']=$size;
+            $data['options']['strength']=$str;
+
+            Cart::add($data);
+
+            return redirect()->route('cart.index');
+        }
+
+
+
+
     }
 
     /**
@@ -149,18 +163,26 @@ class CartController extends Controller
      */
     public function update(Request $request, $id)
     {
-         $validator = Validator::make($request->all(),[
-             'quantity' => 'required|numeric|1,5'
-         ]);
+        // $validation = Validator::make($request->all(),[
+        //      'quantity' => 'required|numeric|max:5',
+        //  ]);
 
-        //  if($validator->fails()){
-        //      session()->flash('errors', collect(['Quantity must be between 1-5']));
-        //      return response()->json(['success' => false], 400);
+        // if($validation->fails()){
+        //      session()->flash('errors', 'Exceeding Quantity Limitation');
+        //      return response()->json(['success' => false],400);
         // }
+
+        $validation = Validator::make($request->all(),[
+            'quantity' => 'required|numeric|max:10',
+        ]);
+
+
+
+        $qty = $request->input('quantity');
 
         Cart::update($id, $request->quantity);
 
-        session()->flash('success_message', 'Quantity was updated successfully');
+        session()->flash('success', 'Quantity was updated successfully');
         return response()->json(['success' => true]);
     }
 
