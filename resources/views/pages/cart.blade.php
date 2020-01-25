@@ -1,11 +1,19 @@
 @extends('layouts.nav')
 
-<script src="https://use.fontawesome.com/c560c025cf.js"></script>
+@section('styles')
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://kit.fontawesome.com/81abfe277e.js" crossorigin="anonymous"></script>
+    <link href="{{ asset('css/cart.css') }}" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+
+@endsection
+
 @section('content')
 <div class="px-4 px-lg-0">
-    <!-- End -->
-
-    <div class="container">
+   <div class="container">
         <div class="row">
             <div class="col-lg-6">
                 @if (session('success'))
@@ -44,7 +52,7 @@
                       <div class="py-2 text-uppercase ">Price</div>
                     </th>
                     <th scope="col" class="border-0 bg-light">
-                      <div class="py-2 text-uppercase text-center">Quantity</div>
+                      <div class="py-2 text-uppercase text-center">Quantity | Update</div>
                     </th>
                     <th scope="col" class="border-0 bg-light">
                       <div class="py-2 text-uppercase">Remove</div>
@@ -65,29 +73,35 @@
                     </th>
                     <td class="border-0 align-middle"><strong>₱{{ $item->subtotal }}</strong></td>
                     <td class="border-0 align-middle">
-                    {{-- <div class="col-sm-4" style="margin-left:50px;" id="form-size">
-                    <input  type="number" class="form-control" id="lastName" value="{{ $item->qty }}"name="quantity" required>
-                    </div> --}}
-
-                        <select class="quantity" data-id="{{ $item->rowId }}">
-                            @for($i = 1; $i < 10 + 1; $i++)
-                                <option {{ $item->qty == $i ? 'selected' : '' }}>{{ $i }}</option>
-                            @endfor
-                            {{-- <option {{ $item->qty == 1 ? 'selected' : '' }}>1</option>
-                            <option {{ $item->qty == 2 ? 'selected' : '' }}>2</option>
-                            <option {{ $item->qty == 3 ? 'selected' : '' }}>3</option>
-                            <option {{ $item->qty == 4 ? 'selected' : '' }}>4</option> --}}
-                        </select>
+                        <form action="{{ route('cart.update', $item->rowId) }}" method="POST">
+                            {{ csrf_field() }}
+                            {{ method_field('PUT') }}
+                            <input type="hidden" name="proId" value="{{$item->id}}">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="number" class="text"  id="lastName" value="{{ $item->qty }}" name="quantity" required>
+                                </div>
+                                {{-- <div class="div-qty">
+                                    <input  type="number" class="form-control input-qty"  id="lastName" value="{{ $item->qty }}"name="quantity" required>
+                                </div> --}}
+                                <div class="col div-submit">
+                                <button type="submit" class="btn-update"><i class="fas fa-sync"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
                     </td>
-                    {{-- <td class="border-0 align-middle"><strong>{{ $item->qty }}</strong></td> --}}
-                    {{-- <td class="border-0 align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td> --}}
                     <td class="border-0 align-middle">
-                        <form action="{{ route('cart.destroy', $item->rowId) }}" method="POST">
+                    {{-- <form action="{{ route('cart.destroy', $item->rowId) }}" method="POST">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
 
-                            <button type="submit" class="text-dark"><i class="fa fa-trash"></i></button>
-                        </form>
+                            <button type="submit" class="btn-delete" data-toggle="modal" data-target="#delete"><i class="fa fa-trash"></i></button>
+                    </form> --}}
+                    {{-- <button type="submit" data-catid={{$item->rowId}} class="btn-delete" data-toggle="modal" data-target="#delete"><i class="fa fa-trash"></i></button> --}}
+                    <a style="color:black;"href="javascript:;" data-toggle="modal" onclick="deleteData({{$item->rowId}})"
+                        data-target="#DeleteModal" class="btn-delete"><i class="fa fa-trash"></i> </a>
                     </td>
                   </tr>
                   @endforeach
@@ -129,18 +143,57 @@
           </div>
         </div>
 
+        <!--Modal Window -->
+
+        <div id="DeleteModal" class="modal fade">
+            <div class="modal-dialog modal-confirm">
+                @foreach (Cart::content() as $item)
+                <form action="{{route('cart.destroy', $item->rowId)}}" id="deleteForm" method="POST">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="icon-box">
+                            <i class="material-icons">&#xE5CD;</i>
+                        </div>
+
+
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        {{ csrf_field() }}
+                        {{ method_field('DELETE') }}
+                        <p>Are you sure you want to delete this item?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                        <button type="submit" name="" class="btn btn-danger" data-dismiss="modal" onclick="formSubmit()">Yes, Delete</button>
+                    </div>
+                </div>
+                </form>
+                @endforeach
+            </div>
+        </div>
       </div>
     </div>
+    @include('sweetalert::alert')
+    <script type="text/javascript">
+        function deleteData(rowId)
+        {
+            var id = rowId;
+            var url = '{{ route("cart.destroy", ":id") }}';
+            url = url.replace(':id', id);
+            $("#deleteForm").attr('action', url);
+        }
+
+        function formSubmit()
+        {
+            $("#deleteForm").submit();
+        }
+     </script>
   </div>
-  @endsection
+@endsection
 
 @section('script')
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-<script src="../../assets/js/vendor/popper.min.js"></script>
-<script src="../../assets/js/vendor/holder.min.js"></script>
-<script src="{{ asset('js/app.js') }}" ></script>
-<script>
+{{-- <script>
     (function(){
         const classname = document.querySelectorAll('.quantity')
 
@@ -155,13 +208,15 @@
                    window.location.href = '{{ route('cart.index') }}'
                 })
                 .catch(function (error) {
-                    console.log(error);
                    window.location.href = '{{ route('cart.index') }}'
                 });
             })
         })
     })();
-</script>
+</script> --}}
+
+
+
 
 @endsection
 

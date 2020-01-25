@@ -5,7 +5,7 @@
 @endsection
 
 @section('styles')
-
+<link href="css/shop-homepage.css" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -62,8 +62,7 @@
             </select>
         </div>
 
-
-            <p style="font-style: italic; margin-left:700px "class="my-auto">{{ $products->count() }} Products</p>
+        <p style="font-style: italic; margin-left:700px "class="my-auto">{{ $products->total() }} Product(s)</p>
 
     </div>
     <hr>

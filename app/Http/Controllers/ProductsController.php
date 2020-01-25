@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Product;
 use App\Category;
-
+use RealRashid\SweetAlert\Facades\Alert;
 //use DB;
 class ProductsController extends Controller
 {
@@ -117,7 +117,8 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
-         $products = Product::find($id);
+        $products = Product::find($id);
+
 
         return view('admin.productshow')->with('product', $products);
     }
@@ -282,17 +283,13 @@ class ProductsController extends Controller
         }
 
         $products = Product::find($id);
+        $mightAlsoLike = Product::where('id', '!=', $id)->inRandomOrder()->take(4)->get();
 
         return view('pages.display')->with([
             'product' => $products,
             'categories' => $categories,
-
+            'mightAlsoLike' => $mightAlsoLike,
 
         ]);
     }
-
-
-
-
-
 }

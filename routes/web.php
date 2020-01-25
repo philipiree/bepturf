@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,6 +17,8 @@
 use Gloudemans\Shoppingcart\Facades\Cart;
 
 Route::get('/', function () {
+
+
     return view('welcome');
 });
 
@@ -33,7 +38,7 @@ Route::group(['middleware' => ['auth','admin']], function () {
     Route::get('/listedproducts', 'ProductsController@index');
     Route::get('/create-product','ProductsController@create');
     Route::get('/edit-product/{id}','ProductsController@edit');
-    Route::delete('/delete-product/{id}','ProductsController@destroy');
+    Route::get('/delete-product/{id}','ProductsController@destroy')->name('product.destroy');;
     Route::resource('product', 'ProductsController');
     Route::get('/listedproducts/{id}', 'ProductsController@show');
     //categories routes
@@ -50,7 +55,7 @@ Route::group(['middleware' => ['auth','admin']], function () {
 
     //Route::resource('category', 'CategoryController', ['except' => ['create']]);
     //Route::resource('category', 'CategoryController', ['only' => ['create', 'index']]);
-});
+    });
 
     //Route::get('/listedproducts/{id}', 'ProductsController@show');
 
@@ -65,11 +70,13 @@ Route::group(['middleware' => ['auth','admin']], function () {
     Route::get('/cart', 'CartController@index')->name('cart.index')->middleware();
     Route::post('/cart', 'CartController@store')->name('cart.store');
     Route::delete('/cart/{id}', 'CartController@destroy')->name('cart.destroy');
-    Route::patch('/cart/{id}', 'CartController@update')->name('cart.update');
+    Route::get('/cart/delete-cart/{id}', 'CategoriesController@destroy');
+    Route::put('/cart/{id}', 'CartController@update')->name('cart.update');
 
     /**checkout controllers */
     Route::get('/checkout', 'CheckoutController@index')->name('checkout.index');
     Route::post('/checkout', 'CheckoutController@store')->name('checkout.store');
+
 
     /*Route::get('empty', function(){
         Cart::destroy();

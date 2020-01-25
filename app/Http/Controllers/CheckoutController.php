@@ -59,7 +59,7 @@ class CheckoutController extends Controller
                 'categoryName' => $categoryName,
                 'data' => Cart::content(),
                 ]);
-            }
+        }
 
 
     }
@@ -129,7 +129,8 @@ class CheckoutController extends Controller
 
             $product->save();
         }
-
+        // Decrease QTY of Product
+        $this->decreaseQty();
         //SUCCESSFUL ORDER
         Cart::instance('default')->destroy();
 
@@ -180,13 +181,12 @@ class CheckoutController extends Controller
         //
     }
 
-    public function getNumbers(){
-        $newSubtotal = Cart::subtotal();
-        $newTotal = $newSubtotal;
+    protected function decreaseQty(){
 
-        return collect([
-            'newSubtotal' => $newSubtotal,
-            'newTotal' => $newTotal,
-        ]);
+        foreach (Cart::content() as $item){
+            $product = Product::find($item->id);
+
+            $product->update(['quantity'=> $product->quantity - $item->qty]);
+        }
     }
 }

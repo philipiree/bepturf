@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Cart;
 use App\Product;
 use App\Category;
+use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -93,20 +94,12 @@ class CartController extends Controller
             'quantity' => 'required|numeric',
         ]);
 
-
-
         $qty = $request->input('quantity');
         $str = $request->input('strength');
         $size = $request->input('size');
         $id = $request->id;
         $info = Product::find($id);
 
-
-        // Cart::add($request->id, $request->name, $request->input('quantity'), $request->price , [$request->display_image])
-            // ->associate('App\Product');
-
-        // dd(Cart::add($request->id, $request->name, $request->input('quantity'), $request->price, 1, [])
-        //     ->associate('App\Product'));
         if($validation->fails()){
             return back()->with('errors', 'Qty must be a number');
         }elseif($qty > $info->quantity){
@@ -163,27 +156,25 @@ class CartController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $validation = Validator::make($request->all(),[
-        //      'quantity' => 'required|numeric|max:5',
-        //  ]);
-
-        // if($validation->fails()){
-        //      session()->flash('errors', 'Exceeding Quantity Limitation');
-        //      return response()->json(['success' => false],400);
-        // }
 
         $validation = Validator::make($request->all(),[
-            'quantity' => 'required|numeric|max:10',
+            'quantity' => 'required|numeric',
         ]);
 
-
-
         $qty = $request->input('quantity');
+        $proId = $request->proId;
 
-        Cart::update($id, $request->quantity);
+        $product = Product::find($proId);
 
-        session()->flash('success', 'Quantity was updated successfully');
-        return response()->json(['success' => true]);
+        $quantity = $product->quantity;
+
+        if($qty <= $quantity){
+            Cart::update($id, $request->quantity);
+            return back()->with('success', 'Cart is updated!');
+        }else{
+            return back()->with('errors', 'Cannot Exceed More Than Available Stocks');
+        }
+
     }
 
     /**
@@ -195,7 +186,7 @@ class CartController extends Controller
     public function destroy($id)
     {
         Cart::remove($id);
-
+        alert()->success('Done!','Successfully Deleted the Item');
         return back();
     }
 

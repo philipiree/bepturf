@@ -6,14 +6,16 @@
 
 @section('styles')
 <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
- <link href="{{ asset('css/itemdisplay.css') }}" rel="stylesheet">
+<link href="{{ asset('css/itemdisplay.css') }}" rel="stylesheet">
+<link href="css/shop-homepage.css" rel="stylesheet">
 @endsection
 
 @section('content')
 
     <div class="row">
 
-          <div style="margin-top: 60px;"class="col-md-12">
+        <div style="margin-top: 60px;"class="col-md-12">
+            <div class="col-lg-6">
             @if (session('success'))
             <div class="alert alert-success" role="alert">
                 {{ session('success') }}
@@ -29,7 +31,7 @@
                     {{ session('update') }}
                 </div>
             @endif
-
+        </div>
         <div class="row">
             <div class="preview col-md-6">
                 <div class="row">
@@ -60,7 +62,7 @@
                         </div>
                         <div class="col-sm-4" id="form-size">
 
-                        <h6>Strength</h6>
+                        <h6 class="colorsize">Strength</h6>
                             <select name="strength" class="custom-select">
                             <option selected>3MG</option>
                             <option value="6MG">6MG</option>
@@ -70,24 +72,8 @@
 
                         </div>
                         <div class="col-sm-3" id="form-size">
-                            <h6>Quantity</h6>
-                            {{-- <select name="quantity" class="custom-select">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            </select> --}}
-
-                            <select class="custom-select" name="quantity">
-                                @for($i = 1; $i < 10 + 1; $i++)
-                                    <option>{{ $i }}</option>
-                                @endfor
-                                {{-- <option {{ $item->qty == 1 ? 'selected' : '' }}>1</option>
-                                <option {{ $item->qty == 2 ? 'selected' : '' }}>2</option>
-                                <option {{ $item->qty == 3 ? 'selected' : '' }}>3</option>
-                                <option {{ $item->qty == 4 ? 'selected' : '' }}>4</option> --}}
-                            </select>
-                            {{-- <input type="number" class="form-control" id="lastName" name="quantity" required> --}}
+                            <h6 class="colorsize">Quantity</h6>
+                            <input type="number" class="form-control" id="lastName" name="quantity" required>
                         </div>
 
                         <input type="hidden" name="id" value="{{ $product->id }}">
@@ -98,12 +84,16 @@
 
 
             </div>
+
         </div>
             </div>
+
         </div>
+        @include('pages.might-like')
 
     <div style="margin-bottom: 100px;"></div>
 @endsection
+
 
 @section('script')
 

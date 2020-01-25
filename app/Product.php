@@ -12,7 +12,7 @@ class Product extends Model
     //public $primaryKey = 'id';
     //Timestamps
     public $timestamps = true;
-
+    protected $fillable = ['quantity'];
     public function categories(){
 
         return $this->belongsToMany('App\Category');
